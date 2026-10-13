@@ -3,11 +3,10 @@ import { Menu, X, ArrowRight } from "lucide-react";
 
 const LINKS = [
   { label: "Home", href: "#top" },
-  { label: "About Us", href: "#estate" },
   { label: "Our Villas", href: "#villas" },
-  { label: "Amenities", href: "#amenities" },
   { label: "Experiences", href: "#experiences" },
   { label: "Gallery", href: "#gallery" },
+  { label: "About Us", href: "#estate" },
 ];
 
 export default function Navbar({ onOpenBooking }) {
@@ -19,41 +18,37 @@ export default function Navbar({ onOpenBooking }) {
     const onScroll = () => {
       setScrolled(window.scrollY > 40);
 
-      // Section elements by id
-      const sectionIds = ["estate", "villas", "amenities", "experiences", "gallery"];
-      const sections = [];
-
-      for (const id of sectionIds) {
+      const getOffsetTop = (id) => {
         const el = document.getElementById(id);
-        if (el) {
-          let top = 0;
-          let curr = el;
-          while (curr) {
-            top += curr.offsetTop;
-            curr = curr.offsetParent;
-          }
-          sections.push({ id, top });
+        if (!el) return null;
+        let top = 0;
+        let curr = el;
+        while (curr) {
+          top += curr.offsetTop;
+          curr = curr.offsetParent;
         }
-      }
+        return top;
+      };
 
-      sections.sort((a, b) => a.top - b.top);
+      const estateTop = getOffsetTop("estate");
+      const villasTop = getOffsetTop("villas");
+      const expTop = getOffsetTop("experiences");
+      const galleryTop = getOffsetTop("gallery");
 
       // Viewport probe line: 35% down the screen
       const probePos = window.scrollY + window.innerHeight * 0.35;
 
-      // Only highlight Home when above About Us / Estate
-      if (sections.length > 0 && probePos < sections[0].top) {
+      if (galleryTop !== null && probePos >= galleryTop) {
+        setActiveSection("gallery");
+      } else if (expTop !== null && probePos >= expTop) {
+        setActiveSection("experiences");
+      } else if (villasTop !== null && probePos >= villasTop) {
+        setActiveSection("villas");
+      } else if (estateTop !== null && probePos >= estateTop) {
+        setActiveSection("estate");
+      } else {
         setActiveSection("top");
-        return;
       }
-
-      let current = "top";
-      for (let i = 0; i < sections.length; i++) {
-        if (probePos >= sections[i].top) {
-          current = sections[i].id;
-        }
-      }
-      setActiveSection(current);
     };
 
     onScroll();
@@ -158,16 +153,20 @@ export default function Navbar({ onOpenBooking }) {
         </div>
 
         <nav className="mobile-nav-links">
-          {LINKS.map((link) => (
-            <a
-              key={link.label}
-              className="mlink"
-              href={link.href}
-              onClick={(e) => scrollToHash(e, link.href)}
-            >
-              {link.label}
-            </a>
-          ))}
+          {LINKS.map((link) => {
+            const targetId = link.href.replace("#", "");
+            const isActive = activeSection === targetId;
+            return (
+              <a
+                key={link.label}
+                className={`mlink ${isActive ? "active" : ""}`}
+                href={link.href}
+                onClick={(e) => scrollToHash(e, link.href)}
+              >
+                {link.label}
+              </a>
+            );
+          })}
         </nav>
 
         <button

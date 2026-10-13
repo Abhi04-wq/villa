@@ -39,13 +39,13 @@ function App() {
       <Navbar onOpenBooking={() => openBooking()} />
 
       <main id="main">
-        {/* 1. Hero 3-Stage Zoom Tour */}
-        <HeroSection />
+        {/* 1. Cinematic Scroll-Controlled 9-Scene Villa Exploration */}
+        <HeroSection onOpenBooking={() => openBooking()} />
 
         {/* 2. Discover Estate */}
         <DiscoverEstate />
 
-        {/* 3. Ultra-Premium Villas Discovery Section (Anchor: #villas) */}
+
         <div id="villas" className="villas-master-section">
           <VillaPageIntro onOpenBooking={openBooking} />
           <FeaturedVilla onOpenBooking={openBooking} />
@@ -53,25 +53,12 @@ function App() {
           <CinematicExperience onOpenBooking={openBooking} />
         </div>
 
-        {/* 4. Considered Features and Amenities (Anchor: #amenities) */}
         <VillaAmenities />
-
-        {/* 6. Curated Experiences */}
         <ExperienceSection />
-
-        {/* 7. Asymmetric Photography Gallery with Lightbox */}
         <VillaGallery />
-
-        {/* 8. Guest Testimonials */}
         <Testimonials />
-
-        {/* 9. Direct Reservation Form */}
         <BookingForm />
-
-        {/* 10. Estate Location and Map Details */}
         <LocationSection />
-
-        {/* 11. Final Closing CTA */}
         <FinalCTA onOpenBooking={() => openBooking()} />
       </main>
 

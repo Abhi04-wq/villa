@@ -160,6 +160,28 @@ section { position: relative; }
   transition: transform 0.45s var(--ease-lux);
 }
 .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+/* Active Navigation Link — Golden Glow & Underline */
+.nav:not(.scrolled) .nav-links a.active {
+  color: var(--gold-light) !important;
+  opacity: 1;
+  font-weight: 700;
+}
+.nav.scrolled .nav-links a.active {
+  color: var(--gold-deep) !important;
+  opacity: 1;
+  font-weight: 700;
+}
+.nav-links a.active::after {
+  transform: scaleX(1) !important;
+  background: var(--gold) !important;
+  height: 2px;
+  box-shadow: 0 0 10px rgba(184, 155, 98, 0.7);
+}
+.mobile-menu a.mlink.active {
+  color: var(--gold-light) !important;
+  font-style: italic;
+}
 .nav-cta { display: flex; align-items: center; gap: 12px; }
 .nav-book {
   font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
@@ -240,54 +262,399 @@ section { position: relative; }
   mix-blend-mode: multiply;
 }
 
-/* 3-Stage Tour HUD */
-.hero-stage-hud {
+/* ═══════════ CINEMATIC SCROLL-CONTROLLED VILLA EXPLORATION ═══════════ */
+.cinematic-journey-track {
+  height: 850vh;
+  position: relative;
+  background: var(--dark);
+}
+
+/* Floating Cinematic HUD Navigation Pill */
+.cinematic-hud-pill {
   position: absolute;
-  top: clamp(86px, 12vh, 105px);
-  right: clamp(16px, 4vw, 48px);
-  z-index: 20;
+  top: clamp(86px, 11vh, 105px);
+  right: clamp(16px, 3.5vw, 40px);
+  z-index: 25;
+  background: rgba(16, 28, 23, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(184, 155, 98, 0.32);
+  border-radius: 999px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(16, 28, 23, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(247, 245, 239, 0.16);
-  border-radius: 999px;
-  padding: 8px 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  pointer-events: none;
+  gap: 12px;
+  padding: 6px 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 }
-.hud-step {
+.hud-header {
   display: flex;
   align-items: center;
   gap: 7px;
   font-size: 10px;
-  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(247, 245, 239, 0.5);
-  transition: all 0.35s ease;
-}
-.hud-step.active {
+  letter-spacing: 0.22em;
   color: var(--gold-light);
   font-weight: 700;
+  padding-right: 10px;
+  border-right: 1px solid rgba(247, 245, 239, 0.16);
 }
-.hud-dot {
+.hud-compass-icon {
+  color: var(--gold);
+  animation: rotateCompass 12s linear infinite;
+}
+@keyframes rotateCompass {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.hud-pct {
+  background: rgba(184, 155, 98, 0.2);
+  color: var(--gold-light);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+}
+.hud-steps-carousel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  max-width: 480px;
+  scrollbar-width: none;
+}
+.hud-steps-carousel::-webkit-scrollbar {
+  display: none;
+}
+.hud-chip {
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(247, 245, 239, 0.55);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.hud-chip:hover {
+  color: var(--ivory);
+  background: rgba(247, 245, 239, 0.08);
+}
+.hud-chip.active {
+  background: rgba(184, 155, 98, 0.22);
+  border-color: var(--gold);
+  color: var(--gold-light);
+  box-shadow: 0 0 14px rgba(184, 155, 98, 0.35);
+}
+.hud-chip .chip-num {
+  font-size: 9px;
+  opacity: 0.8;
+}
+
+@media (max-width: 1024px) {
+  .cinematic-hud-pill {
+    top: 76px;
+    right: 12px;
+    left: 12px;
+    justify-content: space-between;
+  }
+  .hud-steps-carousel {
+    max-width: 100%;
+  }
+  .hud-chip .chip-label {
+    display: none;
+  }
+}
+
+/* Bottom Telemetry & Progress Strip */
+.cinematic-telemetry-strip {
+  position: absolute;
+  bottom: 24px;
+  left: clamp(16px, 4vw, 48px);
+  right: clamp(16px, 4vw, 48px);
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  pointer-events: none;
+  background: rgba(16, 28, 23, 0.68);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(247, 245, 239, 0.12);
+  border-radius: 8px;
+  padding: 10px 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.telemetry-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(247, 245, 239, 0.9);
+  font-weight: 600;
+}
+.telemetry-item .t-label {
+  color: var(--gold-light);
+  font-weight: 700;
+  font-size: 9.5px;
+}
+.telemetry-bar-wrap {
+  flex: 1;
+  max-width: 340px;
+  height: 3px;
+  background: rgba(247, 245, 239, 0.15);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0 16px;
+}
+.telemetry-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 999px;
+  transition: width 0.1s linear;
+}
+
+@media (max-width: 768px) {
+  .cinematic-telemetry-strip {
+    display: none;
+  }
+}
+
+/* ---------------- 3D PHYSICAL SCENE ELEMENTS ---------------- */
+
+/* Scene 4: Architectural Pivot Door */
+.interactive-pivot-door-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  perspective: 1200px;
+}
+.door-perspective-frame {
+  width: min(75vw, 490px);
+  height: 74vh;
+  border: 8px solid #1a221e;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+  position: relative;
+  background: transparent;
+  perspective: 1000px;
+}
+.pivot-door-panel {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2b1f17, #3d2c20, #221812);
+  border: 2px solid rgba(184, 155, 98, 0.45);
+  box-shadow: inset 0 0 45px rgba(0, 0, 0, 0.92);
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.door-handle {
+  position: absolute;
+  right: 28px;
+  top: 48%;
   width: 6px;
-  height: 6px;
+  height: 72px;
+  background: var(--gold-light);
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+/* Scene 5: Architectural Living Pins */
+.interactive-living-pins {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+.living-pin {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(16, 28, 23, 0.84);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(184, 155, 98, 0.45);
+  padding: 8px 16px;
+  border-radius: 999px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+}
+.pin-open-plan {
+  top: 36%;
+  left: 20%;
+}
+.pin-comfort {
+  top: 54%;
+  right: 24%;
+}
+.pin-stone {
+  bottom: 24%;
+  left: 32%;
+}
+.pin-dot {
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: rgba(247, 245, 239, 0.3);
-  transition: all 0.35s ease;
-}
-.hud-step.active .hud-dot {
   background: var(--gold);
-  transform: scale(1.4);
-  box-shadow: 0 0 10px var(--gold);
 }
-.hud-sep {
-  width: 14px;
-  height: 1px;
-  background: rgba(247, 245, 239, 0.2);
+.pin-pulse {
+  position: absolute;
+  left: 15px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: pulsePin 2s infinite ease-out;
+}
+.pin-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+@keyframes pulsePin {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+
+/* Scene 8: Sliding Glass Terrace Doors */
+.interactive-glass-doors-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  pointer-events: none;
+  overflow: hidden;
+}
+.glass-door-panel {
+  width: 50%;
+  height: 100%;
+  border: 4px solid rgba(247, 245, 239, 0.32);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.55);
+  position: relative;
+  will-change: transform;
+}
+.glass-reflection {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.2) 50%, transparent 60%);
+}
+.glass-handle {
+  position: absolute;
+  width: 4px;
+  height: 120px;
+  background: rgba(247, 245, 239, 0.85);
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 2px;
+}
+.glass-left .glass-handle {
+  right: 18px;
+}
+.glass-right .glass-handle {
+  left: 18px;
+}
+
+/* ---------------- SCENE 9: FINALE REVEAL ---------------- */
+.hero-finale-reveal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  text-align: center;
+  color: var(--ivory);
+  width: min(92%, 780px);
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, opacity;
+}
+.finale-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 20px;
+}
+.finale-heading {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 6.4vw, 5.4rem);
+  line-height: 1.02;
+  color: var(--ivory);
+  text-shadow: 0 10px 45px rgba(0, 0, 0, 0.85);
+  margin: 0 0 20px;
+}
+.finale-heading em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+.finale-subtext {
+  font-size: clamp(1rem, 1.3vw, 1.16rem);
+  line-height: 1.75;
+  color: rgba(247, 245, 239, 0.88);
+  max-width: 52ch;
+  margin: 0 0 36px;
+  font-weight: 300;
+}
+.finale-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.finale-scroll-down {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  opacity: 0.85;
+}
+.bounce-anim {
+  animation: bounceDown 1.8s infinite ease-in-out;
+}
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+.portal-subtext {
+  color: rgba(247, 245, 239, 0.82);
+  font-size: clamp(0.95rem, 1.25vw, 1.1rem);
+  line-height: 1.7;
+  max-width: 50ch;
+  margin: 20px auto 0;
+  font-weight: 300;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
 }
 
 .hero-bloom-layer {
@@ -344,13 +711,6 @@ section { position: relative; }
   height: 1px;
   background: var(--gold);
   margin: 24px auto 0;
-}
-.portal-coords {
-  display: block;
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  color: rgba(247, 245, 239, 0.75);
-  margin-top: 14px;
 }
 .hero-content {
   position: relative;
